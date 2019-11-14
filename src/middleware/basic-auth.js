@@ -32,7 +32,7 @@ function requireAuth(req, res, next) {
          if (!passwordsMatch) {
            return res.status(401).json({ error: 'Unauthorized request' })
          }
-+
+
          req.user = user
          next()
        })
