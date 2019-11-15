@@ -11,14 +11,6 @@ describe('Protected Endpoints', function() {
     testReviews,
   } = helpers.makeThingsFixtures()
 
-//   function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
-//     const token = jwt.sign({ user_id: user.id }, secret, {
-//            subject: user.user_name,
-//            algorithm: 'HS256',
-//     })
-//     return `Bearer ${token}`
-//   }
-
   before('make knex instance', () => {
     db = knex({
       client: 'pg',
