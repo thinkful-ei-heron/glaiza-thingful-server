@@ -50,7 +50,6 @@ describe('Auth Endpoints', function() {
            })
        })
      })
-
       it(`responds 400 'invalid user_name or password' when bad user_name`, () => {
         const userInvalidUser = { user_name: 'user-not', password: 'existy' }
         return supertest(app)
@@ -58,7 +57,6 @@ describe('Auth Endpoints', function() {
           .send(userInvalidUser)
           .expect(400, { error: `Incorrect user_name or password` })
       })
-
       it(`responds 400 'invalid user_name or password' when bad password`, () => {
           const userInvalidPass = { user_name: testUser.user_name, password: 'incorrect' }
           return supertest(app)
@@ -66,7 +64,6 @@ describe('Auth Endpoints', function() {
             .send(userInvalidPass)
             .expect(400, { error: `Incorrect user_name or password` })
       })
-
       it(`responds 200 and JWT auth token using secret when valid credentials`, () => {
           const userValidCreds = {
             user_name: testUser.user_name,
@@ -77,6 +74,7 @@ describe('Auth Endpoints', function() {
             process.env.JWT_SECRET,
             {
               subject: testUser.user_name,
+              expiresIn: process.env.JWT_EXPIRY,
               algorithm: 'HS256',
             }
           )
@@ -87,6 +85,30 @@ describe('Auth Endpoints', function() {
               authToken: expectedToken,
             })
         })   
-
   })
+  describe(`POST /api/auth/refresh`, () => {
+    beforeEach('insert users', () =>
+      helpers.seedUsers(
+        db,
+        testUsers,
+      )
+    )
+    it(`responds 200 and JWT auth token using secret`, () => {
+      const expectedToken = jwt.sign(
+        { user_id: testUser.id },
+        process.env.JWT_SECRET,
+        {
+          subject: testUser.user_name,
+          expiresIn: process.env.JWT_EXPIRY,
+          algorithm: 'HS256',
+        }
+      )
+      return supertest(app)
+        .post('/api/auth/refresh')
+        .set('Authorization', helpers.makeAuthHeader(testUser))
+        .expect(200, {
+          authToken: expectedToken,
+        })
+    })
+  }) 
 })

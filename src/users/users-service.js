@@ -18,14 +18,12 @@ const UsersService = {
         }
           return null;
     },
-
     hasUserWithUserName(db, user_name) {
           return db('thingful_users')
             .where({ user_name })
             .first()
             .then(user => !!user);
     },
-
     insertUser(db, newUser) {
         return db
           .insert(newUser)
@@ -33,11 +31,6 @@ const UsersService = {
           .returning('*')
           .then(([user]) => user);
     },
-
-    hashPassword(password) {
-        return bcrypt.hash(password, 12);
-    },
-
     serializeUser(user) {
         return {
           id: user.id,
@@ -47,7 +40,9 @@ const UsersService = {
           date_created: new Date(user.date_created),
         };
     },
-
+    hashPassword(password) {
+      return bcrypt.hash(password, 12);
+  },
 
   };
   

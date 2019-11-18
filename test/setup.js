@@ -1,10 +1,16 @@
-process.env.TZ = 'UTC'
-process.env.NODE_ENV = 'test'
-process.env.JWT_SECRET = 'test-jwt-secret'
+/* eslint-disable quotes */
+process.env.TZ = 'UTC';
+process.env.NODE_ENV = 'test';
+process.env.JWT_SECRET = 'test-jwt-secret';
+process.env.JWT_EXPIRY = '3m';
 
-require('dotenv').config()
-const { expect } = require('chai')
-const supertest = require('supertest')
+require('dotenv').config();
 
-global.expect = expect
-global.supertest = supertest
+process.env.TEST_DB_URL = process.env.TEST_DB_URL
+  || "postgresql://dunder_mifflin@localhost/thingful-test";
+  
+const { expect } = require('chai');
+const supertest = require('supertest');
+
+global.expect = expect;
+global.supertest = supertest;
